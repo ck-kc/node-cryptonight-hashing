@@ -257,6 +257,7 @@ static xmrig::cn_hash_fun get_cn_lite_fn(const int algo) {
   switch (algo) {
     case 0:  return FN(CN_LITE_0);
     case 1:  return FN(CN_LITE_1);
+    case 20: return FN(CN_UPX2);
     default: return FN(CN_LITE_1);
   }
 }
@@ -329,41 +330,27 @@ NAN_METHOD(cryptonight) {
 NAN_METHOD(cryptonight_plex) {
     if (info.Length() < 1) return THROW_ERROR_EXCEPTION("You must provide one argument.");
 
-    Local<Object> target = info[0]->ToObject();
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    Local<Object> target = info[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
     if (!Buffer::HasInstance(target)) return THROW_ERROR_EXCEPTION("Argument 1 should be a buffer object.");
 
-    int variant = 0;
+    int algo = 20;
+    uint64_t height = 0;
 
     if (info.Length() >= 2) {
         if (!info[1]->IsNumber()) return THROW_ERROR_EXCEPTION("Argument 2 should be a number");
-        variant = Nan::To<int>(info[1]).FromMaybe(0);
+        algo = Nan::To<int>(info[1]).FromMaybe(0);
     }
 
-    char output[32];
-    init_ctx();
-    switch (variant) {
-       case 0:
-#if !SOFT_AES && defined(CPU_INTEL)
-                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_INTEL>     (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
-#elif !SOFT_AES && defined(CPU_AMD)
-                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_RYZEN>     (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
-#elif !SOFT_AES && defined(CPU_AMD_OLD)
-                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_BULLDOZER> (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
-#else
-                cryptonight_single_hash    <xmrig::CRYPTONIGHT_PLEX, SOFT_AES, xmrig::VARIANT_UPX2>             (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
-#endif
-                break;
-       default:
-#if !SOFT_AES && defined(CPU_INTEL)
-                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_INTEL>     (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
-#elif !SOFT_AES && defined(CPU_AMD)
-                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_RYZEN>     (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
-#elif !SOFT_AES && defined(CPU_AMD_OLD)
-                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_BULLDOZER> (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
-#else
-                cryptonight_single_hash    <xmrig::CRYPTONIGHT_PLEX, SOFT_AES, xmrig::VARIANT_UPX2>             (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
-#endif
+    if (info.Length() >= 3) {
+        if (!info[2]->IsNumber()) return THROW_ERROR_EXCEPTION("Argument 3 should be a number");
+        height = Nan::To<unsigned int>(info[2]).FromMaybe(0);
     }
+
+    const xmrig::cn_hash_fun fn = get_cn_lite_fn(algo);
+
+    char output[32];
+    fn(reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, height);
 
     v8::Local<v8::Value> returnValue = Nan::CopyBuffer(output, 32).ToLocalChecked();
     info.GetReturnValue().Set(returnValue);
@@ -825,6 +812,7 @@ NAN_METHOD(etchash) {
 NAN_MODULE_INIT(init) {
     Nan::Set(target, Nan::New("cryptonight").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(cryptonight)).ToLocalChecked());
     Nan::Set(target, Nan::New("cryptonight_light").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(cryptonight_light)).ToLocalChecked());
+    Nan::Set(target, Nan::New("cryptonight_plex").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(cryptonight_plex)).ToLocalChecked());
     Nan::Set(target, Nan::New("cryptonight_heavy").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(cryptonight_heavy)).ToLocalChecked());
     Nan::Set(target, Nan::New("cryptonight_pico").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(cryptonight_pico)).ToLocalChecked());
     Nan::Set(target, Nan::New("randomx").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(randomx)).ToLocalChecked());
