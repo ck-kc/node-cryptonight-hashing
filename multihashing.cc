@@ -326,6 +326,49 @@ NAN_METHOD(cryptonight) {
     info.GetReturnValue().Set(returnValue);
 }
 
+NAN_METHOD(cryptonight_plex) {
+    if (info.Length() < 1) return THROW_ERROR_EXCEPTION("You must provide one argument.");
+
+    Local<Object> target = info[0]->ToObject();
+    if (!Buffer::HasInstance(target)) return THROW_ERROR_EXCEPTION("Argument 1 should be a buffer object.");
+
+    int variant = 0;
+
+    if (info.Length() >= 2) {
+        if (!info[1]->IsNumber()) return THROW_ERROR_EXCEPTION("Argument 2 should be a number");
+        variant = Nan::To<int>(info[1]).FromMaybe(0);
+    }
+
+    char output[32];
+    init_ctx();
+    switch (variant) {
+       case 0:
+#if !SOFT_AES && defined(CPU_INTEL)
+                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_INTEL>     (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
+#elif !SOFT_AES && defined(CPU_AMD)
+                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_RYZEN>     (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
+#elif !SOFT_AES && defined(CPU_AMD_OLD)
+                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_BULLDOZER> (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
+#else
+                cryptonight_single_hash    <xmrig::CRYPTONIGHT_PLEX, SOFT_AES, xmrig::VARIANT_UPX2>             (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
+#endif
+                break;
+       default:
+#if !SOFT_AES && defined(CPU_INTEL)
+                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_INTEL>     (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
+#elif !SOFT_AES && defined(CPU_AMD)
+                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_RYZEN>     (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
+#elif !SOFT_AES && defined(CPU_AMD_OLD)
+                cryptonight_single_hash_asm<xmrig::CRYPTONIGHT_PLEX, xmrig::VARIANT_UPX2, xmrig::ASM_BULLDOZER> (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
+#else
+                cryptonight_single_hash    <xmrig::CRYPTONIGHT_PLEX, SOFT_AES, xmrig::VARIANT_UPX2>             (reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
+#endif
+    }
+
+    v8::Local<v8::Value> returnValue = Nan::CopyBuffer(output, 32).ToLocalChecked();
+    info.GetReturnValue().Set(returnValue);
+}
+
 NAN_METHOD(cryptonight_light) {
     if (info.Length() < 1) return THROW_ERROR_EXCEPTION("You must provide one argument.");
 
