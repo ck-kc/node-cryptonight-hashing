@@ -242,6 +242,7 @@ static xmrig::cn_hash_fun get_cn_fn(const int algo) {
     case 8:  return FNA(CN_2);
     case 9:  return FNA(CN_HALF);
     case 11: return FN(CN_GPU);
+    case 12: return FN(CN_UPX2); 
     case 13: return FNA(CN_R);
     case 14: return FNA(CN_RWZ);
     case 15: return FNA(CN_ZLS);
@@ -249,6 +250,7 @@ static xmrig::cn_hash_fun get_cn_fn(const int algo) {
     case 17: return FNA(CN_CCX);
     case 18: return ghostrider;
     case 19: return flex;
+    
     default: return FN(CN_R);
   }
 }
@@ -257,7 +259,6 @@ static xmrig::cn_hash_fun get_cn_lite_fn(const int algo) {
   switch (algo) {
     case 0:  return FN(CN_LITE_0);
     case 1:  return FN(CN_LITE_1);
-    case 20: return FN(CN_UPX2);
     default: return FN(CN_LITE_1);
   }
 }
@@ -334,7 +335,7 @@ NAN_METHOD(cryptonight_plex) {
     Local<Object> target = info[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
     if (!Buffer::HasInstance(target)) return THROW_ERROR_EXCEPTION("Argument 1 should be a buffer object.");
 
-    int algo = 20;
+    int algo = 12;
     uint64_t height = 0;
 
     if (info.Length() >= 2) {
@@ -347,7 +348,7 @@ NAN_METHOD(cryptonight_plex) {
         height = Nan::To<unsigned int>(info[2]).FromMaybe(0);
     }
 
-    const xmrig::cn_hash_fun fn = get_cn_lite_fn(algo);
+    const xmrig::cn_hash_fun fn = get_cn_fn(algo);
 
     char output[32];
     fn(reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, height);
