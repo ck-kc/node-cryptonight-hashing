@@ -270,7 +270,7 @@ static void patchAsmVariants()
         patchCode(cn_double_double_mainloop_sandybridge_asm, cnv2_double_mainloop_sandybridge_asm,  ITER);
     }
 
-#   ifdef XMRIG_ALGO_CN_FEMTO
+
     {
         constexpr uint32_t ITER = CnAlgo<Algorithm::CN_UPX2>().iterations();
         constexpr uint32_t MASK = CnAlgo<Algorithm::CN_UPX2>().mask();
@@ -278,7 +278,7 @@ static void patchAsmVariants()
         patchCode<Algorithm::CN_RWZ>(cn_upx2_mainloop_asm,        cnv2_rwz_mainloop_asm,            ITER,   MASK);
         patchCode<Algorithm::CN_RWZ>(cn_upx2_double_mainloop_asm, cnv2_rwz_double_mainloop_asm,     ITER,   MASK);
     }
-#   endif
+
 
 #   ifdef XMRIG_ALGO_GHOSTRIDER
     patchCode<Algorithm::CN_1>(cn_gr0_single_mainloop_asm, cnv1_single_mainloop_asm, CnAlgo<Algorithm::CN_GR_0>().iterations(), CnAlgo<Algorithm::CN_GR_0>().mask());
@@ -356,10 +356,10 @@ xmrig::CnHash::CnHash()
 
     ADD_FN(Algorithm::CN_CCX);
 
-#   ifdef XMRIG_ALGO_CN_FEMTO
+
     ADD_FN(Algorithm::CN_UPX2);
     ADD_FN_ASM(Algorithm::CN_UPX2);
-#   endif
+
 
 #   ifdef XMRIG_ALGO_CN_GPU
     m_map[Algorithm::CN_GPU] = new cn_hash_fun_array{};
