@@ -193,10 +193,10 @@ static void patchAsmVariants()
     cn_tlo_double_mainloop_sandybridge_asm      = reinterpret_cast<cn_mainloop_fun>         (base + 0x13000);
 #   endif
 
-#   ifdef XMRIG_ALGO_CN_FEMTO
+
     cn_upx2_mainloop_asm                        = reinterpret_cast<cn_mainloop_fun>         (base + 0x14000);
     cn_upx2_double_mainloop_asm                 = reinterpret_cast<cn_mainloop_fun>         (base + 0x15000);
-#   endif
+
 
 #   ifdef XMRIG_ALGO_GHOSTRIDER
     cn_gr0_single_mainloop_asm                  = reinterpret_cast<cn_mainloop_fun>         (base + 0x16000);
