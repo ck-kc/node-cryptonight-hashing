@@ -280,10 +280,10 @@ static xmrig::cn_hash_fun get_cn_pico_fn(const int algo) {
 
 static xmrig::cn_hash_fun get_cn_femto_fn(const int algo) {
   switch (algo) {
-    case 0:  return FNA(CN_UPX2);
-    case 1:  return FNA(CN_UPX2);
-    case 12: return FNA(CN_UPX2);
-    default: return FNA(CN_UPX2);
+    case 0:  return FN(CN_UPX2);
+    case 1:  return FN(CN_UPX2);
+    case 12: return FN(CN_UPX2);
+    default: return FN(CN_UPX2);
   }
 }
 
