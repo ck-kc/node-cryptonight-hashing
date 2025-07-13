@@ -352,15 +352,10 @@ NAN_METHOD(cryptonight_plex) {
         algo = Nan::To<int>(info[1]).FromMaybe(0);
     }
 
-    if (info.Length() >= 3) {
-        if (!info[2]->IsNumber()) return THROW_ERROR_EXCEPTION("Argument 3 should be a number");
-        height = Nan::To<unsigned int>(info[2]).FromMaybe(0);
-    }
-
     const xmrig::cn_hash_fun fn = get_cn_femto_fn(algo);
 
     char output[32];
-    fn(reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, height);
+    fn(reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, 0);
 
     v8::Local<v8::Value> returnValue = Nan::CopyBuffer(output, 32).ToLocalChecked();
     info.GetReturnValue().Set(returnValue);
