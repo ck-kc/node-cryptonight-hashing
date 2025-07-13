@@ -345,7 +345,6 @@ NAN_METHOD(cryptonight_plex) {
     if (!Buffer::HasInstance(target)) return THROW_ERROR_EXCEPTION("Argument 1 should be a buffer object.");
 
     int algo = 0;
-    uint64_t height = 0;
 
     if (info.Length() >= 2) {
         if (!info[1]->IsNumber()) return THROW_ERROR_EXCEPTION("Argument 2 should be a number");
