@@ -282,7 +282,25 @@ static xmrig::cn_hash_fun get_cn_femto_fn(const int algo) {
   switch (algo) {
     case 0:  return FN(CN_UPX2);
     case 1:  return FN(CN_UPX2);
-    case 12: return FN(CN_UPX2);
+    case 2:  return FN(CN_UPX2);
+	  case 3:  return FN(CN_UPX2);
+	  case 4:  return FN(CN_UPX2);
+	  case 5:  return FN(CN_UPX2);
+	  case 6:  return FN(CN_UPX2);
+	  case 7:  return FN(CN_UPX2);
+	  case 8:  return FN(CN_UPX2);
+	  case 9:  return FN(CN_UPX2);
+	  case 10:  return FN(CN_UPX2);
+	  case 11:  return FN(CN_UPX2);
+	  case 12:  return FN(CN_UPX2);
+	  case 13:  return FN(CN_UPX2);
+	  case 14:  return FN(CN_UPX2);
+	  case 15:  return FN(CN_UPX2);
+	  case 16:  return FN(CN_UPX2);
+	  case 17:  return FN(CN_UPX2);
+	  case 18:  return FN(CN_UPX2);
+	  case 19:  return FN(CN_UPX2);
+	  case 20:  return FN(CN_UPX2);
     default: return FN(CN_UPX2);
   }
 }
