@@ -242,7 +242,6 @@ static xmrig::cn_hash_fun get_cn_fn(const int algo) {
     case 8:  return FNA(CN_2);
     case 9:  return FNA(CN_HALF);
     case 11: return FN(CN_GPU);
-    case 12: return FNA(CN_UPX2); 
     case 13: return FNA(CN_R);
     case 14: return FNA(CN_RWZ);
     case 15: return FNA(CN_ZLS);
@@ -278,6 +277,16 @@ static xmrig::cn_hash_fun get_cn_pico_fn(const int algo) {
     default: return FNA(CN_PICO_0);
   }
 }
+
+static xmrig::cn_hash_fun get_cn_femto_fn(const int algo) {
+  switch (algo) {
+    case 0:  return FNA(CN_UPX2);
+    case 1:  return FNA(CN_UPX2);
+    case 12: return FNA(CN_UPX2);
+    default: return FNA(CN_UPX2);
+  }
+}
+
 static xmrig::cn_hash_fun get_argon2_fn(const int algo) {
   switch (algo) {
     case 0:  return FN(AR2_CHUKWA);
@@ -348,7 +357,7 @@ NAN_METHOD(cryptonight_plex) {
         height = Nan::To<unsigned int>(info[2]).FromMaybe(0);
     }
 
-    const xmrig::cn_hash_fun fn = get_cn_fn(algo);
+    const xmrig::cn_hash_fun fn = get_cn_femto_fn(algo);
 
     char output[32];
     fn(reinterpret_cast<const uint8_t*>(Buffer::Data(target)), Buffer::Length(target), reinterpret_cast<uint8_t*>(output), &ctx, height);
