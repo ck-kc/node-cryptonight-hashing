@@ -83,10 +83,10 @@ public:
             return CN_ITER / 8;
 #       endif
 
-#       ifdef XMRIG_ALGO_CN_FEMTO
+
         case Algorithm::CN_UPX2:
             return CN_ITER / 32;
-#       endif
+
 
 #       ifdef XMRIG_ALGO_CN_GPU
         case Algorithm::CN_GPU:
@@ -108,11 +108,11 @@ public:
         }
 #       endif
 
-#       ifdef XMRIG_ALGO_CN_FEMTO
+
         if (algo == Algorithm::CN_UPX2) {
             return 0x1FFF0;
         }
-#       endif
+
 
 #       ifdef XMRIG_ALGO_CN_GPU
         if (algo == Algorithm::CN_GPU) {
