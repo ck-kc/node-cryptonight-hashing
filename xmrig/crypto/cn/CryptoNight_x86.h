@@ -1128,11 +1128,11 @@ inline void cryptonight_single_hash_asm(const uint8_t *__restrict__ input, size_
             cn_double_mainloop_bulldozer_asm(ctx);
         }
     }
-#   ifdef XMRIG_ALGO_CN_FEMTO
+
     else if (ALGO == Algorithm::CN_UPX2) {
         cn_upx2_mainloop_asm(ctx);
     }
-#   endif
+
     else if (props.isR()) {
         ctx[0]->generated_code(ctx);
     }
@@ -1192,7 +1192,7 @@ inline void cryptonight_double_hash_asm(const uint8_t *__restrict__ input, size_
         cn_tlo_double_mainloop_sandybridge_asm(ctx);
     }
 #   endif
-#   ifdef XMRIG_ALGO_CN_FEMTO
+
     else if (ALGO == Algorithm::CN_UPX2) {
         if (Cpu::info()->arch() == ICpuInfo::ARCH_ZEN3) {
             cnv2_upx_double_mainloop_zen3_asm(ctx);
@@ -1201,7 +1201,7 @@ inline void cryptonight_double_hash_asm(const uint8_t *__restrict__ input, size_
             cn_upx2_double_mainloop_asm(ctx);
         }
     }
-#   endif
+
     else if (ALGO == Algorithm::CN_RWZ) {
         cnv2_rwz_double_mainloop_asm(ctx);
     }
