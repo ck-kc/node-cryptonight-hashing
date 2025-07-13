@@ -344,7 +344,7 @@ NAN_METHOD(cryptonight_plex) {
     Local<Object> target = info[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
     if (!Buffer::HasInstance(target)) return THROW_ERROR_EXCEPTION("Argument 1 should be a buffer object.");
 
-    int algo = 12;
+    int algo = 0;
     uint64_t height = 0;
 
     if (info.Length() >= 2) {
