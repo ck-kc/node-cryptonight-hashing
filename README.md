@@ -10,6 +10,7 @@ Algorithms
 * cryptonight-light (v0, v1)
 * cryptonight-heavy (v0, xhv, tube)
 * cryptonight-pico (IRD)
+* cryptonight-plex (cn/upx2) (UPlexa, WRKZ, DeroGold, WorkTips)
 * argon2 (chukwa, chukwa2, wrkz)
 * astrobwt (DERO, DERO-HE)
 * RandomX (Wownero, Arqma, Equilibria, Keva, Graft)
